@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Shadowsocks.View
 {
@@ -617,6 +619,43 @@ namespace Shadowsocks.View
         private void EncryptionSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Конфиг файлы (*.json)|*.json|Все файлы (*.*)|*.*";
+            openFileDialog.Title = "Choose config";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                string jsonContent = File.ReadAllText(filePath);
+
+                Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonContent);
+
+                foreach (var kvp in data)
+                {
+                    switch (kvp.Key)
+                    {
+                        case "server":
+                            IPTextBox.Text = kvp.Value;
+                            break;
+                        case "server_port":
+                            ServerPortTextBox.Text = kvp.Value;
+                            break;
+                        case "local_port":
+                            ProxyPortTextBox.Text = kvp.Value;
+                            break;
+                        case "password":
+                            PasswordTextBox.Text = kvp.Value;
+                            break;
+                        case "method":
+                            EncryptionSelect.Text = kvp.Value;
+                            break;
+                    }
+                }
+            }
         }
     }
 }
