@@ -14,6 +14,7 @@
 5. Supports server auto switching
 6. Supports UDP relay (see Usage)
 7. Supports plugins
+8. Loading config from JSON
 
 ## Downloads
 
